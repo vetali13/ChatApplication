@@ -2,24 +2,34 @@ package client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+
+import lib.Action;
 import lib.Connection;
 import lib.Message;
+import lib.Operation;
 import lib.User;
 
 public class ChatApplication {
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
+		
+		Action sendMessage = new Action(
+										Operation.SEND, 
+										new Message( 
+												"Hello everybody!!!",
+												new User("Writer"),
+												new User("Reader")
+												) 
+										);
+		
 		System.out.println("CLIENT STARTING");
 		// client ---> message --> server
 		// client <--- message <--- server
 		
 		Connection connection = new Connection( "localhost", 7777 );
 		
-		Message message = new Message( "Hello server" );
-		message.setFrom( new User("Author") );
-		message.setTo( new User("Reader") );
 		
-		connection.send( message );
+		connection.send( sendMessage );
 		
 		//////////////////////////////////////
 		

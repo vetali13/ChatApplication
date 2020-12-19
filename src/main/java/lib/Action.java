@@ -3,26 +3,38 @@ package lib;
 import java.io.Serializable;
 
 public class Action implements Serializable{
-	private String name;
-
-	public Action(String name) {
+	private Operation type;
+	private Object target;
+	
+	public Action(Operation type, Object target) {
 		super();
-		this.name = name;
+		this.setType(type);
+		this.setTarget(target);
 	}
 
-	public String getName() {
-		return name;
+	public void setType(Operation type) {
+		this.type = type;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Operation getType() {
+		return type;
+	}
+
+	public void setName(Operation type) {
+		this.type = type;
+	}
+
+	public Object getTarget() {
+		return target;
+	}
+
+	public void setTarget(Object target) {
+		this.target = target;
 	}
 
 	@Override
 	public String toString() {
-		return "Action [name=" + name + "]";
+		return "Action [type=" + type + ", target=" + target + "]";
 	}
-	
-	
 
 }

@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import lib.Action;
 import lib.Connection;
 import lib.Message;
+import lib.Operation;
 
 public class ChatApplication {
 
@@ -18,12 +20,13 @@ public class ChatApplication {
 		ServerSocket serverSocket = new ServerSocket(7777);
 		Connection connection = new Connection( serverSocket.accept() );
 		
+		Action sendMessage = (Action) connection.fetch();
 		System.out.println( "Client sends: " + 
-				connection.fetch()
+				sendMessage
 				);
 		
 		/////////////////////////////////////////////
-		connection.send(new Message("SERVER sends hello back"));
+		connection.send(new Action(Operation.SEND,new Message("SERVER sends hello back")));
 		
 		connection.getSocket().close();
 		serverSocket.close();

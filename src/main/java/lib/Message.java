@@ -12,6 +12,16 @@ public class Message implements Serializable {
 		super();
 		this.body = body;
 	}
+	
+	public Message(String body, User from, User to) {
+		super();
+		this.body = body;
+		setFrom(from);
+		setTo(to);
+	}
+
+
+
 
 	public String getBody() {
 		return body;
