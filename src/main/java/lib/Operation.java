@@ -1,5 +1,5 @@
 package lib;
 
 public enum Operation {
-	SEND, SIGNIN, SIGNOUT
+	SEND, SIGNIN, SIGNOUT, SUCCESS, USERLIST
 }

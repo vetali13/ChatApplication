@@ -1,32 +1,56 @@
 package server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.net.Socket;
-
 import lib.Action;
 import lib.Connection;
-import lib.Message;
 import lib.Operation;
+import lib.User;
 
 public class ChatApplication {
+	
+	public static Map<Socket, User> users = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		System.out.println(">>>SERVER STARTING");
 		
 		// create socket and wait for connections
 		ServerSocket serverSocket = new ServerSocket(7777);
-		Connection connection = new Connection( serverSocket.accept() );
+		Socket clientSocket = serverSocket.accept();
+		Connection connection = new Connection( clientSocket );
 		
-		Action sendMessage = (Action) connection.fetch();
-		System.out.println( "Client sends: " + 
-				sendMessage
-				);
+		Action fetchedAction = (Action) connection.fetch();
+		User user =  (User)fetchedAction.getTarget();
+		
+		switch (fetchedAction.getType()) {
+		  case SIGNIN:
+		    users.put(clientSocket, user );
+		    connection.send(new Action(Operation.SUCCESS));
+		    break;
+		    
+		  default:
+			break;
+		}
 		
 		/////////////////////////////////////////////
-		connection.send(new Action(Operation.SEND,new Message("SERVER sends hello back")));
+		
+			fetchedAction = (Action) connection.fetch();
+		
+			switch (fetchedAction.getType()) {
+			  case USERLIST:
+				List<User> userList = new ArrayList<>();  
+				users.forEach((k,v) -> userList.add(v));  
+			    connection.send(new Action(Operation.SUCCESS, userList));
+			    break;
+	
+			  default:
+				break;
+			}
 		
 		connection.getSocket().close();
 		serverSocket.close();

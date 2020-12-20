@@ -1,44 +1,30 @@
 package aspects;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import lib.Action;
 
 public aspect LoggingAspect {
 
-	pointcut whenSendingMessage(): call( public void send(Object) throws IOException );
+	pointcut whenSendingAction(): call( public void send(Object) throws IOException );
 	
-	before(): whenSendingMessage() {
+	before(): whenSendingAction() {
 		
-	    Object methodArg = thisJoinPoint.getArgs()[0];
-	    String messageBody = "";
+	    Action methodArg = (Action) thisJoinPoint.getArgs()[0];
 	    
-	    for( Method m : methodArg.getClass().getDeclaredMethods() ) {
-			if( m.getName().compareToIgnoreCase( "getBody" )==0) {
-				try {
-					messageBody = (String) m.invoke(methodArg);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	    
-		System.out.println("Sending message: " + messageBody);
+	    System.out.println("Sending " + methodArg.getType() + " request");
 	}
 	
 	
-	after() throwing (IOException e): whenSendingMessage() {
+	after() throwing (IOException e): whenSendingAction() {
 		  
 		System.out.println("Threw an exception: " + e);
 	      }
 	
 	
-	after(): whenSendingMessage() {
+	after(): whenSendingAction() {
 
-//		String methodArg = thisJoinPoint.getArgs()[0].toString();
 		
-		System.out.println("Message sent!");
+		System.out.println("Request sent!");
 	}
 	
 }

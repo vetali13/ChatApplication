@@ -11,6 +11,15 @@ public class Action implements Serializable{
 		this.setType(type);
 		this.setTarget(target);
 	}
+	
+	
+
+	public Action(Operation type) {
+		super();
+		this.setType(type);
+	}
+
+
 
 	public void setType(Operation type) {
 		this.type = type;
